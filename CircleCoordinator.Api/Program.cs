@@ -18,6 +18,7 @@ builder.Services
         .AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<CreateCircleCoordinatorCommand>());
 
 builder.Services.AddDomainServices();
+builder.Services.AddValidatorConfiguration();
 
 var app = builder.Build();
 

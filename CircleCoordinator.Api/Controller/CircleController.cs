@@ -2,6 +2,7 @@
 using CircleCoordinator.Domain.Commands;
 using CircleCoordinator.Domain.Queries;
 
+using FluentValidation;
 using MediatR;
 
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +13,16 @@ namespace CircleCoordinator.Api.Controller;
 public class CircleController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IValidator<RequestCreateCoordinator> _createRequest;
+    private readonly IValidator<RequestUpdateCirclesCoordinator> _updRequest;
 
-    public CircleController(IMediator mediator)
+    public CircleController(IMediator mediator,
+                            IValidator<RequestCreateCoordinator> createRequest,
+                            IValidator<RequestUpdateCirclesCoordinator> updRequest)
     {
         _mediator = mediator;
+        _createRequest = createRequest;
+        _updRequest = updRequest;
     }
 
     [HttpGet]
@@ -42,6 +49,16 @@ public class CircleController : ControllerBase
     [Route("")]
     public async Task<IActionResult> CreateCircle([FromBody] RequestCreateCoordinator requestCoordinator, CancellationToken cancellationToken)
     {
+        var validationResult = await _createRequest.ValidateAsync(requestCoordinator, cancellationToken);
+
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(new ErrorResponse
+            {
+                Errors = validationResult.Errors.Select(e => e.ErrorMessage).ToArray()
+            });
+        }
+
         CreateCircleCoordinatorCommand command = new CreateCircleCoordinatorCommand
         {
             X = requestCoordinator.X,
@@ -62,6 +79,16 @@ public class CircleController : ControllerBase
     public async Task<IActionResult> UpdateCircles([FromBody] RequestUpdateCirclesCoordinator requestCoordinator,
                                                     CancellationToken cancellationToken)
     {
+        var validationResult = await _updRequest.ValidateAsync(requestCoordinator, cancellationToken);
+
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(new ErrorResponse
+            {
+                Errors = validationResult.Errors.Select(e => e.ErrorMessage).ToArray()
+            });
+        }
+
         UpdateCirclesCoordinatorCommand command = new UpdateCirclesCoordinatorCommand
         {
             Id = requestCoordinator.Id,

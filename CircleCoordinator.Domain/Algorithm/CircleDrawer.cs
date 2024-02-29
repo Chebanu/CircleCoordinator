@@ -1,4 +1,5 @@
-﻿using CircleCoordinator.Domain.Models.Algorithm;
+﻿using CircleCoordinator.Domain.Constants;
+using CircleCoordinator.Domain.Models.Algorithm;
 
 namespace CircleCoordinator.Domain.Algorithm;
 
@@ -11,8 +12,6 @@ internal interface ICircleDrawer
 internal class CircleDrawer : ICircleDrawer
 {
     private readonly Random random;
-    private const int CanvasWidth = 200;
-    private const int CanvasHeight = 160;
 
     public CircleDrawer()
     {
@@ -21,7 +20,7 @@ internal class CircleDrawer : ICircleDrawer
 
     public Circle DrawCircle(int x, int y)
     {
-        int maxDiameter = Math.Min(CanvasWidth, CanvasHeight);
+        int maxDiameter = Math.Min(CanvasSize.CanvasWidth, CanvasSize.CanvasHeight);
         int diameter = random.Next(10, maxDiameter + 1);
         int radius = diameter / 2;
 
