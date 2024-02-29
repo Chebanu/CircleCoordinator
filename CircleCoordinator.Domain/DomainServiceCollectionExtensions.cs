@@ -1,5 +1,6 @@
 ﻿using CircleCoordinator.Domain.Algorithm;
 using CircleCoordinator.Domain.Helpers;
+using CircleCoordinator.Domain.Profilies;
 using CircleCoordinator.Domain.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +12,7 @@ public static class DomainServiceCollectionExtensions
     {
         return services.AddSingleton<IDateTimeProvider, DateTimeProvider>()
                         .AddScoped<ICircleDrawer, CircleDrawer>()
-                        .AddScoped<ICoordinatorRepository, CoordinatorRepository>();
+                        .AddScoped<ICoordinatorRepository, CoordinatorRepository>()
+                        .AddAutoMapper(cfg => cfg.AddProfile<AppProfile>());
     }
 }
