@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace CircleCoordinator.Contracts.Models;
+﻿namespace CircleCoordinator.Contracts.Models;
 
 public class Coordinator
 {
@@ -10,4 +8,5 @@ public class Coordinator
     public int Y { get; init; }
     public int Diameter { get; init; }
     public string Color { get; init; }
+    public DateTimeOffset ModifiedAt { get; init; }
 }
