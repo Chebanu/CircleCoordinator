@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CircleCoordinator.Domain.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240227235544_Initial")]
+    [Migration("20240228225626_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -25,6 +25,18 @@ namespace CircleCoordinator.Domain.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("CircleCoordinator.Domain.Models.Database.CircleSet", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("circleSet");
+                });
+
             modelBuilder.Entity("CircleCoordinator.Domain.Models.Database.Coordinator", b =>
                 {
                     b.Property<Guid>("Id")
@@ -32,7 +44,11 @@ namespace CircleCoordinator.Domain.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<Guid>("CircleSetId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Color")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("color");
 
@@ -44,6 +60,10 @@ namespace CircleCoordinator.Domain.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("diameter");
 
+                    b.Property<DateTimeOffset>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("modifiedAt");
+
                     b.Property<int>("X")
                         .HasColumnType("integer")
                         .HasColumnName("x");
@@ -54,7 +74,25 @@ namespace CircleCoordinator.Domain.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CircleSetId");
+
                     b.ToTable("coordinator");
+                });
+
+            modelBuilder.Entity("CircleCoordinator.Domain.Models.Database.Coordinator", b =>
+                {
+                    b.HasOne("CircleCoordinator.Domain.Models.Database.CircleSet", "CircleSet")
+                        .WithMany("Coordinators")
+                        .HasForeignKey("CircleSetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CircleSet");
+                });
+
+            modelBuilder.Entity("CircleCoordinator.Domain.Models.Database.CircleSet", b =>
+                {
+                    b.Navigation("Coordinators");
                 });
 #pragma warning restore 612, 618
         }

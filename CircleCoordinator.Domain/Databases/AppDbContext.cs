@@ -5,7 +5,8 @@ namespace CircleCoordinator.Domain.Databases;
 
 public class AppDbContext : DbContext
 {
-    public DbSet<Coordinator> Coordinators { get; init; }
+    public DbSet<Coordinator> Coordinators { get; set; }
+    public DbSet<CircleSet> CircleSets { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> context) : base(context)
     {
