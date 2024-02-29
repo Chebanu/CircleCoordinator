@@ -1,4 +1,4 @@
-using CircleCoordinator.Domain.Commands;
+﻿using CircleCoordinator.Domain.Commands;
 using CircleCoordinator.Domain.Databases;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,12 +8,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 builder.Services
         .AddDbContext<AppDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services
         .AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<CreateCircleCoordinatorCommand>());
-
 
 builder.Services.AddDomainServices();
 
